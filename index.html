@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hidden Submarine｜隱藏潛水艇</title>
+<style>
+:root{color-scheme:dark;--bg:#061324;--panel:#0b2139;--edge:#215070;--aqua:#67e7ef;--text:#e7f8ff;--muted:#9dbdd0;--miss:#99d5ff;--hit:#ff8086;--gold:#ffdb7a}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;color:var(--text);background:radial-gradient(circle at 25% 5%,#173d60 0%,transparent 45%),linear-gradient(135deg,#061b2e,#040d19 90%)}
+.layout{max-width:1450px;margin:auto;padding:27px;display:grid;grid-template-columns:minmax(350px,1.35fr) minmax(310px,.85fr);gap:23px}.board-section,.side .panel{background:linear-gradient(155deg,rgba(17,48,75,.89),rgba(5,19,37,.96));border:1px solid #296589;border-radius:17px;box-shadow:0 14px 40px #0006, inset 0 1px #ffffff12}.board-section{padding:22px}.eyebrow{font-size:12px;letter-spacing:3px;color:var(--aqua);text-transform:uppercase}.board-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}.board-head h2{margin:7px 0 0;font-size:22px}.pill{border-radius:30px;border:1px solid #367c98;padding:6px 11px;color:#b8edff;font-size:13px}.board-wrap{width:100%;max-width:760px;margin:0 auto;display:grid;grid-template-columns:30px minmax(0,1fr);grid-template-rows:24px minmax(0,1fr);gap:7px}.col-labels{display:grid;grid-template-columns:repeat(8,1fr);text-align:center;color:#a8d4e9;font-weight:700;grid-column:2}.row-labels{grid-row:2;display:grid;grid-template-rows:repeat(8,1fr);align-items:center;text-align:center;font-weight:700;color:#a8d4e9}.board{grid-column:2;grid-row:2;width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);gap:3px;padding:4px;border:1px solid #34bde6;border-radius:8px;background:#05192b;box-shadow:0 0 24px #0ba2cf25;overflow:hidden}
+.cell{border:1px solid #478db5aa;border-radius:3px;cursor:crosshair;color:#eefcff;font-weight:800;font-size:clamp(12px,2vw,22px);position:relative;display:grid;place-items:center;background:linear-gradient(155deg,#2678a0 0%,#07577f 38%,#063758 72%,#126e91 100%);transition:filter .12s,outline .12s}.cell::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(155deg,transparent 0 13px,#d7faff0c 15px,transparent 21px)}.cell:hover:not(:disabled){filter:brightness(1.5);outline:2px solid #9cf8ff;outline-offset:-2px}.cell:focus-visible{outline:3px solid white;outline-offset:-3px}.cell:disabled{cursor:default} .cell.debug-ship{background:linear-gradient(145deg,#168f92,#055b75);border-color:#55f1dc}.cell.debug-damaged{background:linear-gradient(145deg,#a84151,#572536);border-color:#ff8999}.cell.debug-ship::after{content:"▰";font-size:clamp(13px,2.4vw,27px);color:#e0fff7;filter:drop-shadow(0 1px 3px #001)}.cell.debug-damaged::after{content:"✕";font-size:clamp(13px,2.4vw,27px);color:white}.view-buttons{display:flex;gap:8px;flex-wrap:wrap}.view-buttons button{cursor:pointer;border:1px solid #397f9c;background:#0b2c48;color:#cdeafa;padding:9px 14px;border-radius:9px;font-weight:700}.view-buttons button.active{background:#12768b;color:white;border-color:#73f2ff}.debug-extra{margin-top:12px;padding:11px;border:1px solid #32748a;background:#07263e;border-radius:8px;font-size:13px;line-height:1.7}.debug-extra[hidden]{display:none}.debug-item{padding:5px 0;border-bottom:1px solid #ffffff18}.debug-item:last-child{border:0}.debug-legend{display:flex;gap:13px;flex-wrap:wrap;margin-top:8px;font-size:12px}.swatch{width:12px;height:12px;border-radius:2px;display:inline-block;margin-right:4px;background:#168f92}.swatch.damaged{background:#a84151}.swatch.dead{background:#81939f}.cell.sunk{background:linear-gradient(150deg,#7f939c,#435c6b 48%,#183749);border-color:#a9d6e9}.cell.sunk::after{content:"⚓";font-size:clamp(14px,2.3vw,28px);position:absolute;filter:drop-shadow(0 2px 2px #0018)}.cell.sunk[data-end="1"]::after{content:"◈"}.bottom-note{font-size:13px;line-height:1.6;color:var(--muted);margin-top:19px}.side{display:grid;gap:14px;align-content:start}.panel{padding:20px}.title-panel h1{margin:1px 0 3px;font-size:clamp(27px,3vw,43px);letter-spacing:.3px;text-shadow:0 0 22px #1cbbfa55}.title-panel .subtitle{color:#aceaff;font-size:17px;letter-spacing:4px}.status-row{display:grid;grid-template-columns:1fr 1.3fr;gap:12px}.status-row .panel{padding:15px 18px}.counter{font-size:34px;font-weight:800;color:var(--aqua)}.status{font-size:clamp(21px,2.5vw,30px);font-weight:900;min-height:42px;display:flex;align-items:center}.status.hit{color:var(--hit)}.status.miss{color:var(--miss)}.status.sunk{color:var(--gold)}.panel h3{font-size:15px;color:#bdeeff;letter-spacing:.6px;margin:0 0 13px}.ship-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff16;padding:7px 0}.ship-row:last-child{border:0}.ship-dots{letter-spacing:4px;color:#78bbcf}.ship-dots.dead{color:#6c8194;text-decoration:line-through}.ship-len{color:var(--muted);font-size:12px}.muted{color:var(--muted)}.info{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat-big{color:var(--aqua);font-size:29px;font-weight:800}.rules{font-size:13px;color:#c5dbe8;line-height:1.6}.rules p{margin:7px 0}.log{height:185px;overflow:auto;padding-right:3px}.log-item{padding:9px 1px;border-bottom:1px solid #ffffff12;font-size:13px;display:flex;justify-content:space-between;gap:8px}.log-item b.hit{color:var(--hit)}.log-item b.miss{color:var(--miss)}.log-item b.sunk{color:var(--gold)}.buttons{display:flex;gap:10px;flex-wrap:wrap}.buttons button{border:1px solid #36bad3;color:#e9fbff;border-radius:10px;background:linear-gradient(180deg,#116b85,#103d5b);padding:12px 15px;font:inherit;font-weight:700;cursor:pointer;flex:1;min-width:100px}.buttons button:hover{filter:brightness(1.25)}.buttons button:focus-visible{outline:3px solid white}.small{font-size:12px}.victory{color:var(--gold);font-weight:800}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media(max-width:900px){.layout{grid-template-columns:1fr;max-width:750px;padding:14px}.board-section{padding:15px}.side{gap:12px}.panel{padding:15px}}@media(max-width:420px){.info{grid-template-columns:1fr}.status-row{grid-template-columns:1fr 1.2fr}}
+</style>
+</head>
+<body>
+<main class="layout">
+ <section class="board-section" aria-label="潛水艇棋盤">
+  <div class="board-head"><div><div class="eyebrow">Tactical Ocean Grid</div><h2>戰術海域 <span class="pill" id="view-label">玩家視角</span></h2></div><span class="pill">8 × 8</span></div>
+  <div class="view-buttons" role="group" aria-label="遊戲視角" style="margin-bottom:15px"><button id="player-view" class="active" aria-pressed="true">🌊 玩家視角</button><button id="admin-view" aria-pressed="false">🔎 後台視角</button></div>
+  <div class="board-wrap"><div class="col-labels" id="cols"></div><div class="row-labels" id="rows"></div><div class="board" id="board" aria-label="8乘8攻擊棋盤"></div></div>
+  <div class="debug-extra" id="debug-extra" hidden><strong>後台監看（非玩家資訊）</strong><div class="debug-legend"><span><i class="swatch"></i>未受損船身</span><span><i class="swatch damaged"></i>受損部位</span><span><i class="swatch dead"></i>已擊沉</span></div><div id="debug-fleet"></div><div id="debug-last"></div></div>
+  <div class="bottom-note">🌊 玩家視角：攻擊後格子依然顯示海水；僅顯示 Hit / Miss 訊息。<br>⚓ 只有整艘潛水艇擊沉，船身才會浮出海面並固定不動。</div>
+ </section>
+ <aside class="side">
+  <div class="panel title-panel"><div class="eyebrow">Search · Attack · Sink</div><h1>Hidden Submarine</h1><div class="subtitle">隱藏潛水艇</div></div>
+  <div class="status-row"><div class="panel"><div class="muted small">TURN</div><div class="counter" id="turn">0</div></div><div class="panel"><div class="muted small">LAST ATTACK</div><div id="status" class="status" role="status" aria-live="polite">準備開始</div></div></div>
+  <div class="info"><div class="panel"><h3>剩餘潛水艇</h3><div id="fleet"></div></div><div><div class="panel"><h3>移動機率</h3><div class="stat-big">50%</div><div class="muted small">僅被命中且未擊沉的船</div></div><div class="panel" style="margin-top:12px"><h3>進度</h3><div class="stat-big"><span id="sunk-count">0</span> / 6</div><div class="muted small">已擊沉數量</div></div></div></div>
+  <div class="panel rules"><h3>遊戲規則</h3><p>• 點擊海域格子發射一次攻擊。</p><p>• Hit / Miss 不會標記在棋盤上。</p><p>• 只有本次被命中的船才有 50% 機率移動一格，傷害會跟著船身移動。</p><p>• 潛水艇彼此不能接觸，包含斜對角。</p><p>• 重複打到同一受損部位不會再扣血。</p></div>
+  <div class="panel"><h3>最近攻擊紀錄</h3><div class="log" id="log" aria-live="polite"></div></div>
+  <div class="buttons"><button id="new">▶ 新遊戲</button><button id="restart">↻ 重新開始同一盤</button><button id="rules">ⓘ 規則</button></div>
+  <div id="note" class="muted small"></div>
+ </aside>
+</main>
+<script>
+'use strict';
+// 規則：8×8；長度 4,4,3,3,2,2；船間不可八方向相鄰。
+// 只有本回合被擊中、且尚未擊沉的潛水艇，才有 50% 機率合法平移一步。
+// damage[i] 代表該船第 i 個「實體部位」受損；不隨座標重置。
+const N=8, LENGTHS=[4,4,3,3,2,2], MOVE_PROBABILITY=0.5;
+const $=id=>document.getElementById(id);
+let ships=[], initialShips=[], turn=0, logs=[], finished=false, view='player', lastMove='尚未攻擊';
+const rand=n=>Math.floor(Math.random()*n);
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a;}
+function cells(ship){const out=[];for(let i=0;i<ship.len;i++)out.push({r:ship.r+(ship.vertical?i:0),c:ship.c+(ship.vertical?0:i),part:i});return out;}
+function inBounds(s){return cells(s).every(p=>p.r>=0&&p.r<N&&p.c>=0&&p.c<N);}
+function separated(s,others){const a=cells(s);for(const other of others){for(const p of a){for(const q of cells(other)){if(Math.abs(p.r-q.r)<=1&&Math.abs(p.c-q.c)<=1)return false;}}}return true;}
+function candidates(len){const arr=[];for(const vertical of [false,true])for(let r=0;r<N;r++)for(let c=0;c<N;c++){const s={r,c,len,vertical,damage:Array(len).fill(false),sunk:false};if(inBounds(s))arr.push(s);}return shuffle(arr);}
+function generateFleet(){
+ // 隨機化、回溯擺放：保證每艘船與其他船間隔至少一格（含斜向）。
+ const all=LENGTHS.map(candidates), placed=[];
+ function dfs(i){if(i===all.length)return true;for(const s of all[i]){if(!separated(s,placed))continue;placed.push(s);if(dfs(i+1))return true;placed.pop();}return false;}
+ if(!dfs(0))throw Error('無法產生符合間距規則的棋盤');
+ return placed.map((s,i)=>({...s,id:i,damage:s.damage.slice()}));
+}
+function cloneFleet(arr){return arr.map(s=>({...s,damage:s.damage.slice()}));}
+function newGame(){initialShips=generateFleet();restart();}
+function restart(){ships=cloneFleet(initialShips);turn=0;logs=[];finished=false;lastMove='尚未攻擊';setStatus('準備開始','');$('note').textContent='點擊任何海水格子即可攻擊。';render();}
+function setStatus(text,type){const el=$('status');el.textContent=text;el.className='status '+type;}
+function moveShip(s){if(s.sunk){lastMove='已擊沉，不會移動';return;}
+ if(Math.random()>=MOVE_PROBABILITY){lastMove=`船 ${s.id+1}：未觸發移動（50% 判定）`;return;}
+ const dirs=shuffle([[1,0],[-1,0],[0,1],[0,-1]]),others=ships.filter(x=>x!==s);
+ const valid=dirs.map(([dr,dc])=>({...s,r:s.r+dr,c:s.c+dc})).filter(t=>inBounds(t)&&separated(t,others));
+ if(valid.length){const before=`${String.fromCharCode(65+s.c)}${s.r+1}`;const chosen=valid[rand(valid.length)];s.r=chosen.r;s.c=chosen.c;lastMove=`船 ${s.id+1}：${before} → ${String.fromCharCode(65+s.c)}${s.r+1}（船身起點）`;}else{lastMove=`船 ${s.id+1}：沒有合法的相鄰移動位置`;}
+}
+function attack(r,c){if(finished)return;
+ // 已沉船格不可再次受擊：保留其固定顯示。
+ if(ships.some(s=>s.sunk&&cells(s).some(p=>p.r===r&&p.c===c))){setStatus('已擊沉海域','');return;}
+ turn++;let result='Miss',sunkName='',hitShip=null,newDamage=false;lastMove='Miss：所有船維持原位';
+ for(const s of ships){if(s.sunk)continue;const part=cells(s).find(p=>p.r===r&&p.c===c);if(!part)continue;
+  hitShip=s;
+  if(s.damage[part.part]){result='Hit（重複命中）';lastMove=`船 ${s.id+1}：重複命中已受損部位，不移動`;}
+  else{s.damage[part.part]=true;newDamage=true;result='Hit';}
+  if(s.damage.every(Boolean)){s.sunk=true;result='Sunk!';sunkName=`長度 ${s.len} 的潛水艇已擊沉`;}
+  break;
+ }
+ // 只有命中全新（未受損）部位、且未擊沉的船，才判定是否移動。
+ // Miss、重複命中、Sunk 都不移動。
+ if(hitShip&&newDamage&&!hitShip.sunk)moveShip(hitShip);else if(hitShip&&hitShip.sunk)lastMove=`船 ${hitShip.id+1}：已擊沉，永久固定`; 
+ logs.unshift({turn,cell:String.fromCharCode(65+c)+(r+1),result});
+ if(ships.every(s=>s.sunk)){finished=true;setStatus('全部擊沉！','sunk');$('note').textContent=`勝利！總計 ${turn} 次攻擊。`}
+ else{setStatus(result,result==='Sunk!'?'sunk':result.startsWith('Hit')?'hit':'miss');$('note').textContent=sunkName||`已攻擊 ${String.fromCharCode(65+c)}${r+1}；${!hitShip?'Miss：所有潛水艇維持原位。':!newDamage?'重複命中已受損部位：所有潛水艇不移動。':'命中新的船身部位：該船有 50% 機率移動。'}`;}
+ render();
+}
+function render(){
+ $('turn').textContent=turn;$('sunk-count').textContent=ships.filter(s=>s.sunk).length;
+ const sunkPositions=new Map();for(const s of ships.filter(s=>s.sunk)){for(const p of cells(s))sunkPositions.set(`${p.r},${p.c}`,{p,s});}
+ const debugMap=new Map();if(view==='admin')for(const s of ships.filter(s=>!s.sunk))for(const p of cells(s))debugMap.set(`${p.r},${p.c}`,{s,p});
+ const board=$('board');board.replaceChildren();
+ for(let r=0;r<N;r++)for(let c=0;c<N;c++){const key=`${r},${c}`,sunk=sunkPositions.get(key),debug=debugMap.get(key),btn=document.createElement('button');btn.type='button';btn.className='cell'+(sunk?' sunk':debug?(debug.s.damage[debug.p.part]?' debug-damaged':' debug-ship'):'');btn.disabled=finished||!!sunk;btn.setAttribute('aria-label',`${String.fromCharCode(65+c)}${r+1}${sunk?' 已擊沉':''}`);if(sunk)btn.dataset.end=(sunk.p.part===0||sunk.p.part===sunk.s.len-1)?'1':'0';btn.addEventListener('click',()=>attack(r,c));board.append(btn);}
+ const fleet=$('fleet');fleet.replaceChildren();ships.forEach(s=>{const row=document.createElement('div');row.className='ship-row';const a=document.createElement('span');a.className='ship-dots'+(s.sunk?' dead':'');a.textContent='▰'.repeat(s.len);const b=document.createElement('span');b.className='ship-len';b.textContent=s.sunk?'已擊沉':`長度 ${s.len}`;row.append(a,b);fleet.append(row);});
+ $('view-label').textContent=view==='admin'?'後台視角':'玩家視角';
+ $('debug-extra').hidden=view!=='admin';const d=$('debug-fleet');d.replaceChildren();if(view==='admin')ships.forEach(s=>{const line=document.createElement('div');line.className='debug-item';const pos=cells(s).map(p=>String.fromCharCode(65+p.c)+(p.r+1)).join('、');line.textContent=`船 ${s.id+1}｜長度 ${s.len}｜${s.vertical?'垂直':'水平'}｜${pos}｜損傷 ${s.damage.filter(Boolean).length}/${s.len}｜${s.sunk?'已擊沉':'尚未擊沉'}`;d.append(line);});$('debug-last').textContent=view==='admin'?'最近移動：'+lastMove:'';
+ const log=$('log');log.replaceChildren();for(const entry of logs){const row=document.createElement('div');row.className='log-item';const where=document.createElement('span');where.textContent=`第 ${entry.turn} 回合　${entry.cell}`;const res=document.createElement('b');res.className=entry.result==='Sunk!'?'sunk':entry.result.startsWith('Hit')?'hit':'miss';res.textContent=entry.result;row.append(where,res);log.append(row);}
+}
+$('cols').textContent='';for(let c=0;c<N;c++){const e=document.createElement('span');e.textContent=String.fromCharCode(65+c);$('cols').append(e)}
+for(let r=0;r<N;r++){const e=document.createElement('span');e.textContent=r+1;$('rows').append(e)}
+function setView(mode){view=mode;$('player-view').classList.toggle('active',mode==='player');$('admin-view').classList.toggle('active',mode==='admin');$('player-view').setAttribute('aria-pressed',String(mode==='player'));$('admin-view').setAttribute('aria-pressed',String(mode==='admin'));render();}
+$('player-view').addEventListener('click',()=>setView('player'));
+$('admin-view').addEventListener('click',()=>setView('admin'));
+$('new').addEventListener('click',newGame);
+$('restart').addEventListener('click',restart);
+$('rules').addEventListener('click',()=>alert('Hidden Submarine 規則\n\n1. 8×8 棋盤、6 艘潛水艇（4、4、3、3、2、2 格）。\n2. 每次點擊攻擊一格，立即顯示 Hit 或 Miss，但棋盤不留標記。\n3. 已命中船身部位的損傷會跟船移動，重複命中不累加。\n4. 只有本回合被命中且未擊沉的那艘船有 50% 機率移動一格（上下左右）；Miss 時全部不動。\n5. 船彼此不能重疊或八方向相鄰，也不能靠近已沉船。\n6. 每個船身部位都受損，船才會擊沉並固定顯示。\n7. 所有船擊沉即獲勝。'));
+newGame();
+</script>
+</body>
+</html>
